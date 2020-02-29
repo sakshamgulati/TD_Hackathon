@@ -23,7 +23,7 @@ for index, js in enumerate(json_files):
         json_text = json.load(json_file)
         for call_id in json_text['title'].keys():
             call_body = ' | '.join(map(str, json_text['body'][call_id]))
-            call_date = datetime.fromtimestamp(
+            call_date = datetime.utcfromtimestamp(
                     json_text['date'][call_id]/1000).strftime(
                             "%A, %B %d, %Y %I:%M:%S")
             calls_list.append([ticker, call_id, 
