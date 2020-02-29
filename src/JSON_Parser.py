@@ -25,7 +25,7 @@ for index, js in enumerate(json_files):
             call_body = ' | '.join(map(str, json_text['body'][call_id]))
             call_date = datetime.utcfromtimestamp(
                     json_text['date'][call_id]/1000).strftime(
-                            "%A, %B %d, %Y %I:%M:%S")
+                            "%A, %B %d, %R")
             calls_list.append([ticker, call_id, 
                                            json_text['title'][call_id], 
                                            call_date,
