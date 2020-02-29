@@ -1,13 +1,11 @@
-import csv
 import os
-import numpy as np
 import pandas as pd
-import csv
 
+
+# Creates main dataframe and a dictionary with key: ticker and value: company's price and returns data
 def excels_to_df():
-    # Create dataframe
-    main_df = pd.read_csv("../hackathon_data/companies.csv")
-    print(main_df)
+    # dataframe for companies.csv
+    companies_df = pd.read_csv("../hackathon_data/companies.csv")
 
     # NEED TO CHANGE THIS FOR TESTING
     os.chdir("../hackathon_data/company_prices_returns")
@@ -15,20 +13,29 @@ def excels_to_df():
     files = os.listdir(curr_path)
     csv_files = [f for f in files if f[-3:] == 'csv']
 
-    # create dict with ticker to company's df of price and returns
-    ticker_to_df = {}
-    company_tickers = []
-    for csv in csv_files:
-        start = csv.find("_adj_close.csv")
-        company_tickers.append(csv[:start])
+    # Define a dataframe with the required column names
+    column_names = ('Ticker', 'Date', 'Close', 'Returns')
+    price_returns_df = pd.DataFrame(columns=column_names)
 
-    for i in range(len(company_tickers)):
-        ticker = company_tickers[i]
-        ticker_to_df[ticker] = pd.read_csv(csv_files[i])
+    for csv_files in csv_files:
+        company = pd.read_csv(csv_files)
+        date = company["Date"]
+        close = company["Close"]
+        returns = company["Returns"]
+        ticker = csv_files.strip('_adj_close.csv')
+        d = {'Ticker': ticker, 'Date': date, 'Close': close, 'Returns': returns}
+        company_df = pd.DataFrame(data=d)
+        price_returns_df = price_returns_df.append(company_df, ignore_index=True)
 
-    print(ticker_to_df)
+    return [companies_df, price_returns_df]
+
 
 
 if __name__ == "__main__":
-    excels_to_df()
+    data = excels_to_df()
+    companies_df = data[0]
+    price_returns_df = data[1]
+    companies_df.to_csv("companes_df.csv")
+    price_returns_df.to_csv("price_returns_df.csv")
+
 
